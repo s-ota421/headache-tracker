@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>頭痛管理システム</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div class="tabs">
+  <button class="tab active" onclick="switchTab('record')">記録する</button>
+  <button class="tab" onclick="switchTab('history')">履歴</button>
+  <button class="tab" onclick="switchTab('graph')">グラフ</button>
+</div>
+
+<!-- 記録タブ -->
+<div id="tab-record" class="panel active">
+
+  <!-- 基本情報 -->
+  <div class="card">
+    <p class="section-label">基本</p>
+    <div class="field">
+      <label>日付</label>
+      <input type="date" id="rec-date">
+    </div>
+    <div class="field">
+      <label>時間帯</label>
+      <select id="rec-time">
+        <option value="朝">朝</option>
+        <option value="昼">昼</option>
+        <option value="夕方">夕方</option>
+        <option value="夜">夜</option>
+        <option value="深夜">深夜</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 痛みの強さ（JSでボタン生成） -->
+  <div class="card">
+    <p class="section-label">痛みの強さ（0〜10）</p>
+    <div class="pain-buttons" id="pain-btns"></div>
+  </div>
+
+  <!-- 薬・対処法 -->
+  <div class="card">
+    <p class="section-label">薬・対処法</p>
+
+    <div class="field">
+      <label>服薬</label>
+      <select id="rec-med" onchange="handleMed(this)">
+        <option value="">— 選択 —</option>
+        <option value="ロキソニン">ロキソプロフェン</option>
+        <option value="other">飲んでない</option>
+        <option value="other">その他</option>
+      </select>
+      <!-- その他を選んだ時だけ表示 -->
+      <div class="free-note" id="med-free">
+        <input type="text" id="med-text" placeholder="薬の名前を入力">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>対処法</label>
+      <select id="rec-action" onchange="handleAction(this)">
+        <option value="">— 選択 —</option>
+        <option value="横になって休んだ">横になって休んだ</option>
+        <option value="冷やした">冷やした</option>
+        <option value="温めた">温めた</option>
+        <option value="暗い部屋で安静">暗い部屋で安静</option>
+        <option value="水分補給">水分補給</option>
+        <option value="特になし">特になし</option>
+        <option value="other">その他</option>
+      </select>
+      <div class="free-note" id="action-free">
+        <input type="text" id="action-text" placeholder="対処法を入力">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>備考（任意）</label>
+      <textarea id="rec-note" placeholder="その他"></textarea>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <button class="btn-ghost" onclick="clearForm()">クリア</button>
+    <button class="btn-save" onclick="saveRecord()">保存</button>
+  </div>
+</div>
+
+<!-- 履歴タブ -->
+<div id="tab-history" class="panel">
+  <div class="metrics" id="metrics-area"></div>
+  <div class="log-list" id="log-list"></div>
+</div>
+
+<!-- グラフタブ -->
+<div id="tab-graph" class="panel">
+  <div class="card">
+    <p class="section-label">痛みの強さ推移</p>
+    <div class="chart-wrap">
+      <canvas id="chart-pain"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <p class="section-label">時間帯別 発生回数</p>
+    <div class="chart-wrap">
+      <canvas id="chart-time"></canvas>
+    </div>
+  </div>
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
