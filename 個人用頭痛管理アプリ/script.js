@@ -8,7 +8,7 @@ let timeChart = null;
 // 起動時にスプレッドシートからデータ取得
 async function loadRecords() {
   try {
-    const res = await fetch(GAS_URL);
+    const res = await fetch(GAS_URL + '?t=' + Date.now());
     records = await res.json();
     records.sort((a, b) => b.id - a.id);
   } catch(e) {
@@ -78,7 +78,11 @@ async function saveRecord() {
     note: document.getElementById('rec-note').value
   };
   try {
-    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(rec) });
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(rec)
+    });
     records.unshift(rec);
     clearForm();
     alert('保存しました');
