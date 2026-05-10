@@ -1,4 +1,4 @@
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxM_bKx-QjqlEmmvI4qvKroo_5e2dv2UlvnjEdJZX04qCwr1Oxf8E36Pz3TRuhxRESVZQ/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwXPidq8UjQ3mWyq1fRMIYYbS1GuBUChRfn0ftlBAJ_rzn_ZvQOAJ3hzLWpzBgD3Mg6Lw/exec';
 let records = [];
 let selectedPain = null;
 let painChart = null;
