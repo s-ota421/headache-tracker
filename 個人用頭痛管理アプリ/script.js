@@ -6,15 +6,21 @@ let painChart = null;
 let timeChart = null;
 
 // 起動時にスプレッドシートからデータ取得
-async function loadRecords() {
-  try {
-    const res = await fetch(GAS_URL, { redirect: 'follow' });
-    const text = await res.text();
-    records = JSON.parse(text);
-    records.sort((a, b) => b.id - a.id);
-  } catch(e) {
-    console.error('データ取得失敗', e);
-  }
+function loadRecords() {
+  return new Promise((resolve) => {
+    const callbackName = 'gasCallback_' + Date.now();
+    window[callbackName] = function(data) {
+      records = data;
+      records.sort((a, b) => b.id - a.id);
+      delete window[callbackName];
+      document.getElementById('jsonp-script').remove();
+      resolve();
+    };
+    const script = document.createElement('script');
+    script.id = 'jsonp-script';
+    script.src = GAS_URL + '?callback=' + callbackName;
+    document.body.appendChild(script);
+  });
 }
 
 // 今日の日付をセット
