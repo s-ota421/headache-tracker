@@ -8,8 +8,9 @@ let timeChart = null;
 // 起動時にスプレッドシートからデータ取得
 async function loadRecords() {
   try {
-    const res = await fetch(GAS_URL + '?t=' + Date.now());
-    records = await res.json();
+    const res = await fetch(GAS_URL, { redirect: 'follow' });
+    const text = await res.text();
+    records = JSON.parse(text);
     records.sort((a, b) => b.id - a.id);
   } catch(e) {
     console.error('データ取得失敗', e);
