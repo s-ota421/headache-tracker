@@ -74,24 +74,39 @@ async function saveRecord() {
   const action = document.getElementById('rec-action').value === 'other'
     ? document.getElementById('action-text').value
     : document.getElementById('rec-action').value;
+  
+  const existingIndex = records.findIndex(r => r.date === date && r.time === time);
+  const isOverwrite = existingIndex !== -1;
+
+  const id = isOverwrite ? records[existingIndex].id : Date.now();
+  
   const rec = {
-    id: Date.now(),
-    date: document.getElementById('rec-date').value,
-    time: document.getElementById('rec-time').value,
+    id,
+    date,
+    time,
     pain: selectedPain,
     med: med || '記録なし',
     action: action || '記録なし',
     note: document.getElementById('rec-note').value
   };
+
+  const id = isOverwrite ? records[existingIndex].id : Date.now();
+  
   try {
     await fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
       body: JSON.stringify(rec)
     });
-    records.unshift(rec);
+
+if (isOverwrite) {
+      records[existingIndex] = rec;  // ローカルも上書き
+    } else {
+      records.unshift(rec);           // ローカルに新規追加
+    }
+  
     clearForm();
-    alert('保存しました');
+    alert(isOverwrite ? '上書き保存しました' : '保存しました');
   } catch(e) {
     alert('保存に失敗しました');
   }
