@@ -4,14 +4,12 @@ let selectedPain = null;
 let painChart = null;
 let timeChart = null;
 
-// 起動時にスプレッドシートからデータ取得
 function loadRecords() {
   return new Promise((resolve) => {
     const callbackName = 'gasCallback_' + Date.now();
     const script = document.createElement('script');
     script.id = 'jsonp-script';
 
-    // ★ タイムアウト処理を追加（5秒で諦めて空データで起動）
     const timer = setTimeout(() => {
       delete window[callbackName];
       if (document.getElementById('jsonp-script')) script.remove();
@@ -28,7 +26,6 @@ function loadRecords() {
       resolve();
     };
 
-    // ★ 読み込みエラー時も止まらないように
     script.onerror = () => {
       clearTimeout(timer);
       delete window[callbackName];
@@ -41,10 +38,8 @@ function loadRecords() {
   });
 }
 
-// 今日の日付をセット
 document.getElementById('rec-date').value = new Date().toISOString().slice(0, 10);
 
-// 痛みボタンをJSで生成（0〜10）
 const painBtns = document.getElementById('pain-btns');
 for (let i = 0; i <= 10; i++) {
   const b = document.createElement('button');
@@ -84,7 +79,6 @@ function clearForm() {
   document.getElementById('rec-note').value = '';
 }
 
-// 保存をGASに送信
 async function saveRecord() {
   if (selectedPain === null) { alert('痛みの強さを選んでください'); return; }
   const med = document.getElementById('rec-med').value === 'other'
@@ -94,12 +88,12 @@ async function saveRecord() {
     ? document.getElementById('action-text').value
     : document.getElementById('rec-action').value;
 
-  const date = document.getElementById('rec-date').value;   // ← 追加
-  const time = document.getElementById('rec-time').value;   // ← 追加
+  const date = document.getElementById('rec-date').value;
+  const time = document.getElementById('rec-time').value;
 
   const existingIndex = records.findIndex(r => r.date === date && r.time === time);
   const isOverwrite = existingIndex !== -1;
-  const id = isOverwrite ? records[existingIndex].id : Date.now();  // ← 1つ目だけ残す
+  const id = isOverwrite ? records[existingIndex].id : Date.now();
 
   const rec = {
     id,
@@ -110,7 +104,6 @@ async function saveRecord() {
     action: action || '記録なし',
     note: document.getElementById('rec-note').value
   };
-  // ← 2つ目の const id を削除
 
   if (isOverwrite) {
     const ok = confirm(`${date} ${time} の記録が既にあります。上書きしますか？`);
@@ -133,6 +126,7 @@ async function saveRecord() {
   } catch(e) {
     alert('保存に失敗しました');
   }
+} // ← ここが抜けていた
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
