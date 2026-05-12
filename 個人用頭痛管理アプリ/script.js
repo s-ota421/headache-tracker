@@ -119,7 +119,7 @@ function renderHistory() {
     return;
   }
   const total = records.length;
-  const avg = (records.reduce((s, r) => s + Number(r.pain), 0 / total).toFixed(1);
+  const avg = (records.reduce((s, r) => s + Number(r.pain), 0) / total).toFixed(1);
   const maxP = Math.max(...records.map(r => Number(r.pain)));
   area.innerHTML = `
     <div class="metric"><div class="metric-label">記録回数</div><div class="metric-value">${total}回</div></div>
