@@ -8,15 +8,34 @@ let timeChart = null;
 function loadRecords() {
   return new Promise((resolve) => {
     const callbackName = 'gasCallback_' + Date.now();
+    const script = document.createElement('script');
+    script.id = 'jsonp-script';
+
+    // ★ タイムアウト処理を追加（5秒で諦めて空データで起動）
+    const timer = setTimeout(() => {
+      delete window[callbackName];
+      if (document.getElementById('jsonp-script')) script.remove();
+      console.warn('GAS読み込みタイムアウト');
+      resolve();
+    }, 5000);
+
     window[callbackName] = function(data) {
+      clearTimeout(timer);
       records = data;
       records.sort((a, b) => b.id - a.id);
       delete window[callbackName];
-      document.getElementById('jsonp-script').remove();
+      script.remove();
       resolve();
     };
-    const script = document.createElement('script');
-    script.id = 'jsonp-script';
+
+    // ★ 読み込みエラー時も止まらないように
+    script.onerror = () => {
+      clearTimeout(timer);
+      delete window[callbackName];
+      console.warn('GAS読み込みエラー');
+      resolve();
+    };
+
     script.src = GAS_URL + '?callback=' + callbackName;
     document.body.appendChild(script);
   });
