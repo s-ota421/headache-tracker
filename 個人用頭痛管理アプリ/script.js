@@ -74,12 +74,14 @@ async function saveRecord() {
   const action = document.getElementById('rec-action').value === 'other'
     ? document.getElementById('action-text').value
     : document.getElementById('rec-action').value;
-  
+
+  const date = document.getElementById('rec-date').value;   // ← 追加
+  const time = document.getElementById('rec-time').value;   // ← 追加
+
   const existingIndex = records.findIndex(r => r.date === date && r.time === time);
   const isOverwrite = existingIndex !== -1;
+  const id = isOverwrite ? records[existingIndex].id : Date.now();  // ← 1つ目だけ残す
 
-  const id = isOverwrite ? records[existingIndex].id : Date.now();
-  
   const rec = {
     id,
     date,
@@ -89,28 +91,29 @@ async function saveRecord() {
     action: action || '記録なし',
     note: document.getElementById('rec-note').value
   };
+  // ← 2つ目の const id を削除
 
-  const id = isOverwrite ? records[existingIndex].id : Date.now();
-  
+  if (isOverwrite) {
+    const ok = confirm(`${date} ${time} の記録が既にあります。上書きしますか？`);
+    if (!ok) return;
+  }
+
   try {
     await fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
       body: JSON.stringify(rec)
     });
-
-if (isOverwrite) {
-      records[existingIndex] = rec;  // ローカルも上書き
+    if (isOverwrite) {
+      records[existingIndex] = rec;
     } else {
-      records.unshift(rec);           // ローカルに新規追加
+      records.unshift(rec);
     }
-  
     clearForm();
     alert(isOverwrite ? '上書き保存しました' : '保存しました');
   } catch(e) {
     alert('保存に失敗しました');
   }
-}
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
