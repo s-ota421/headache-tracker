@@ -2,7 +2,6 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwXPidq8UjQ3mWyq1fRMIYY
 let records = [];
 let selectedPain = null;
 let painChart = null;
-let timeChart = null;
 
 function loadRecords() {
   return new Promise((resolve) => {
@@ -193,31 +192,6 @@ function renderGraphs() {
       responsive: true,
       maintainAspectRatio: false,
       scales: { y: { min: 0, max: 10, ticks: { stepSize: 2 } } },
-      plugins: { legend: { display: false } }
-    }
-  });
-
-  const timeCounts = { 朝: 0, 昼: 0, 夕方: 0, 夜: 0, };
-  records.forEach(r => { if (timeCounts[r.time] !== undefined) timeCounts[r.time]++; });
-
-  if (timeChart) timeChart.destroy();
-  timeChart = new Chart(document.getElementById('chart-time'), {
-    type: 'line',
-    data: {
-      labels: Object.keys(timeCounts),
-      datasets: [{
-        data: Object.values(timeCounts),
-        borderColor: '#378ADD',
-        backgroundColor: 'rgba(55,138,221,0.1)',
-        pointBackgroundColor: '#378ADD',
-        tension: 0.3,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
       plugins: { legend: { display: false } }
     }
   });
