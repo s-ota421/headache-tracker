@@ -117,9 +117,16 @@ async function saveRecord() {
     } else {
       records.unshift(rec);
     }
+     btn.textContent = '保存できました ✓';
     clearForm();
     alert(isOverwrite ? '上書き保存しました' : '保存しました');
+    setTimeout(() => {
+      btn.textContent = '保存';
+      btn.disabled = false;
+    }, 2000);
   } catch(e) {
+    btn.textContent = '保存';
+    btn.disabled = false;
     alert('保存に失敗しました');
   }
 }
