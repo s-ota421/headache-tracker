@@ -197,7 +197,7 @@ function renderGraphs() {
     }
   });
 
-  const timeCounts = { 朝: 0, 昼: 0, 夕方: 0, 夜: 0, 深夜: 0 };
+  const timeCounts = { 朝: 0, 昼: 0, 夕方: 0, 夜: 0, };
   records.forEach(r => { if (timeCounts[r.time] !== undefined) timeCounts[r.time]++; });
 
   if (timeChart) timeChart.destroy();
