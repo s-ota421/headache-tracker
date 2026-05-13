@@ -115,7 +115,23 @@ async function saveRecord() {
       method: 'POST',
       mode: 'no-cors',
       body: JSON.stringify(rec)
+    });try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(rec)
     });
+    if (isOverwrite) {
+      records[existingIndex] = rec;
+    } else {
+      records.unshift(rec);
+    }
+    btn.textContent = '保存できました ✓';
+    clearForm();
+    setTimeout(() => {
+      btn.textContent = '保存';
+      btn.disabled = false;
+    }, 3000); // 2000→3000に変更
     if (isOverwrite) {
       records[existingIndex] = rec;
     } else {
