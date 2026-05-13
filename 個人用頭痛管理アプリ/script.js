@@ -106,16 +106,7 @@ async function saveRecord() {
     if (!ok) return;
   }
 
-  const btn = document.querySelector('.btn-save');
-  btn.textContent = '保存中…';
-  btn.disabled = true;
-
   try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify(rec)
-    });try {
     await fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -126,29 +117,12 @@ async function saveRecord() {
     } else {
       records.unshift(rec);
     }
-    btn.textContent = '保存できました ✓';
     clearForm();
-    setTimeout(() => {
-      btn.textContent = '保存';
-      btn.disabled = false;
-    }, 3000); // 2000→3000に変更
-    if (isOverwrite) {
-      records[existingIndex] = rec;
-    } else {
-      records.unshift(rec);
-    }
-    btn.textContent = '保存できました ✓';
-    clearForm();
-    setTimeout(() => {
-      btn.textContent = '保存';
-      btn.disabled = false;
-    }, 2000);
+    alert(isOverwrite ? '上書き保存しました' : '保存しました');
   } catch(e) {
-    btn.textContent = '保存';
-    btn.disabled = false;
     alert('保存に失敗しました');
   }
-}// ← ここが抜けていた
+}
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
