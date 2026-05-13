@@ -95,10 +95,7 @@ async function saveRecord() {
   const id = isOverwrite ? records[existingIndex].id : Date.now();
 
   const rec = {
-    id,
-    date,
-    time,
-    pain: selectedPain,
+    id, date, time, pain: selectedPain,
     med: med || '記録なし',
     action: action || '記録なし',
     note: document.getElementById('rec-note').value
@@ -108,6 +105,10 @@ async function saveRecord() {
     const ok = confirm(`${date} ${time} の記録が既にあります。上書きしますか？`);
     if (!ok) return;
   }
+
+  const btn = document.querySelector('.btn-save');
+  btn.textContent = '保存中…';
+  btn.disabled = true;
 
   try {
     await fetch(GAS_URL, {
@@ -121,11 +122,17 @@ async function saveRecord() {
       records.unshift(rec);
     }
     clearForm();
-    alert(isOverwrite ? '上書き保存しました' : '保存しました');
+    btn.textContent = '保存できました ✓';
+    setTimeout(() => {
+      btn.textContent = '保存';
+      btn.disabled = false;
+    }, 2000);
   } catch(e) {
+    btn.textContent = '保存';
+    btn.disabled = false;
     alert('保存に失敗しました');
   }
-} // ← ここが抜けていた
+}// ← ここが抜けていた
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
