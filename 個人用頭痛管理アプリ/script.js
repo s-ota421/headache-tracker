@@ -121,8 +121,8 @@ async function saveRecord() {
     } else {
       records.unshift(rec);
     }
-    clearForm();
     btn.textContent = '保存できました ✓';
+    clearForm();
     setTimeout(() => {
       btn.textContent = '保存';
       btn.disabled = false;
