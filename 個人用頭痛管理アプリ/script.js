@@ -78,7 +78,27 @@ function clearForm() {
   document.getElementById('rec-note').value = '';
 }
 
-async function saveRecord() {
+// ✅ 追加：トースト通知関数
+function showToast(msg, isError = false) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText =
+      'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
+      'padding:12px 24px;border-radius:8px;font-size:15px;font-weight:500;' +
+      'color:#fff;pointer-events:none;transition:opacity .3s;z-index:9999;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = isError ? '#A32D2D' : '#3B6D11';
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
+
+// ✅ 修正①：引数に btn を追加（HTML側も saveRecord(this) に変更すること）
+async function saveRecord(btn) {
   if (selectedPain === null) { alert('痛みの強さを選んでください'); return; }
   const med = document.getElementById('rec-med').value === 'other'
     ? document.getElementById('med-text').value
@@ -117,17 +137,12 @@ async function saveRecord() {
     } else {
       records.unshift(rec);
     }
-     btn.textContent = '保存できました ✓';
     clearForm();
-    alert(isOverwrite ? '上書き保存しました' : '保存しました');
-    setTimeout(() => {
-      btn.textContent = '保存';
-      btn.disabled = false;
-    }, 2000);
+    // ✅ 修正②：alert の代わりにトーストで通知
+    showToast(isOverwrite ? '上書き保存しました ✓' : '保存しました ✓');
   } catch(e) {
-    btn.textContent = '保存';
-    btn.disabled = false;
-    alert('保存に失敗しました');
+    // ✅ 修正③：エラーもトーストで通知
+    showToast('保存に失敗しました', true);
   }
 }
 
