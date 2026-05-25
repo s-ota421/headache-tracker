@@ -201,7 +201,7 @@ function renderGraphs() {
         backgroundColor: 'rgba(226,75,74,0.08)',
         fill: true,
         tension: 0.3,
-        pointRadius: 5,
+        pointRadius: 2,
         pointBackgroundColor: sorted.map(r =>
           r.pain <= 3 ? '#639922' : r.pain <= 6 ? '#BA7517' : '#A32D2D'
         )
